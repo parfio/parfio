@@ -1,0 +1,38 @@
+@startuml
+
+Title Overview parfy
+
+cloud ocr as "OCR-Magic"
+[pwa] as "Progressive Web App"
+[image_recognizer] as "Image Recognizer"
+[mqtt_broker] as "MQTT-Broker"
+[text_mapper] as "Text-Mapper"
+[user_dictionary] as "User-Dictionary"
+[channel_manager] as "Channel-Manager"
+[rocket_chat_notifier] as "RocketChat Notifier"
+[mail_notifier] as "Mail Notifier"
+
+pwa -> mqtt_broker : 1
+mqtt_broker --> image_recognizer: 1
+image_recognizer --> ocr
+image_recognizer --> mqtt_broker : 2
+mqtt_broker --> text_mapper: 2
+text_mapper --> user_dictionary
+text_mapper --> mqtt_broker: 3
+mqtt_broker -> channel_manager: 3
+channel_manager -> mqtt_broker: 4(a/b)
+channel_manager -> user_dictionary
+mqtt_broker --> rocket_chat_notifier: 4a
+mqtt_broker --> mail_notifier: 4b
+
+rocket_chat_notifier --> user_dictionary
+mail_notifier --> user_dictionary
+
+note  "1) recognize/{clientID} \n\
+2) lookup/{clientID} \n\
+3) decide/{clientID} \n\
+4a) notify/rc/{clientID}/{userID} \n\
+4b) notify/mail/{clientID}/{userID}"  as n1
+
+
+@enduml

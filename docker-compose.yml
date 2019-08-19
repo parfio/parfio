@@ -1,1 +1,44 @@
-^
+version: '3'
+
+services:
+  mqtt-broker:
+    image: emqx/emqx
+    environment:
+      EMQX_MQTT__MAX_PACKET_SIZE: 10MB
+
+  image-recognizer-aws:
+    build:
+      context: ./image-recognizer-js
+    environment:
+      CFG_MQTT_BROKER: "mqtt-broker:1883"
+      CFG_MQTT_CLIENT_ID: "aws"
+      CFG_AWS_ACCESS_KEY: "<access_key>"
+      CFG_AWS_SECRET_ACCESS_KEY: "<secret_access_key>"
+      CFG_AWS_REGION: "eu-west-1"
+      CFG_AWS_CONFIDENCE_MIN: 0
+    depends_on:
+      - mqtt-broker
+    restart: always
+
+  image-recognizer-azure:
+    build:
+      context: ./image-recognizer-js
+    environment:
+      CFG_MQTT_BROKER: "mqtt-broker:1883"
+      CFG_MQTT_CLIENT_ID: "azure"
+      CFG_AZURE_REGION: "westeurope"
+      CFG_AZURE_SUBSCRIPTION_KEY: "<subscription_key>"
+    depends_on:
+      - mqtt-broker
+    restart: always
+
+  text-mapper:
+    build:
+      context: ./text-mapper
+    environment:
+      CFG_MQTT_BROKER: "mqtt-broker:1883"
+    depends_on:
+      - mqtt-broker
+    restart: always
+
+

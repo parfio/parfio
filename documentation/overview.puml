@@ -15,12 +15,12 @@ cloud ocr as "OCR-Magic"
 pwa -> mqtt_broker : 1
 mqtt_broker --> image_recognizer: 1
 image_recognizer --> ocr
-image_recognizer --> mqtt_broker : 2
+image_recognizer --> mqtt_broker : 2, s
 mqtt_broker --> text_mapper: 2
 text_mapper --> user_dictionary
-text_mapper --> mqtt_broker: 3
+text_mapper --> mqtt_broker: 3, s
 mqtt_broker -> channel_manager: 3
-channel_manager -> mqtt_broker: 4(a/b)
+channel_manager -> mqtt_broker: 4(a/b), s
 channel_manager -> user_dictionary
 mqtt_broker --> rocket_chat_notifier: 4a
 mqtt_broker --> mail_notifier: 4b
@@ -28,11 +28,12 @@ mqtt_broker --> mail_notifier: 4b
 rocket_chat_notifier --> user_dictionary
 mail_notifier --> user_dictionary
 
-note  "1) recognize/{clientID} \n\
-2) lookup/{clientID} \n\
-3) decide/{clientID} \n\
-4a) notify/rc/{clientID}/{userID} \n\
-4b) notify/mail/{clientID}/{userID}"  as n1
+note  "1) recognize/{clientID}/{correlationID} \n\
+2) lookup/{clientID}/{correlationID} \n\
+3) decide/{clientID}/{correlationID} \n\
+4a) notify/rc/{clientID}/{userID}/{correlationID} \n\
+4b) notify/mail/{clientID}/{userID}/{correlationID} \n\
+s) status/{clientID}/{correlationID}"  as n1
 
 
 @enduml

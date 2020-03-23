@@ -7,8 +7,7 @@ services:
       EMQX_MQTT__MAX_PACKET_SIZE: 10MB
 
   image-recognizer-aws:
-    build:
-      context: ./image-recognizer-js
+    image: docker.pkg.github.com/parfy-io/image-recognizer/image-recognizer:latest
     environment:
       CFG_MQTT_BROKER: "mqtt-broker:1883"
       CFG_MQTT_CLIENT_ID: "aws"
@@ -21,8 +20,7 @@ services:
     restart: always
 
   image-recognizer-azure:
-    build:
-      context: ./image-recognizer-js
+    image: docker.pkg.github.com/parfy-io/image-recognizer/image-recognizer:latest
     environment:
       CFG_MQTT_BROKER: "mqtt-broker:1883"
       CFG_MQTT_CLIENT_ID: "azure"

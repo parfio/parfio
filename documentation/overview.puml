@@ -26,13 +26,16 @@ mqtt_broker --> rocket_chat_notifier: 4a
 mqtt_broker --> mail_notifier: 4b
 
 rocket_chat_notifier --> user_dictionary
+rocket_chat_notifier -> mqtt_broker: s
 mail_notifier --> user_dictionary
+mail_notifier -> mqtt_broker: s
+
 
 note  "1) recognize/{clientID}/{correlationID} \n\
 2) lookup/{clientID}/{correlationID} \n\
 3) decide/{clientID}/{correlationID} \n\
-4a) notify/rc/{clientID}/{userID}/{correlationID} \n\
-4b) notify/mail/{clientID}/{userID}/{correlationID} \n\
+4a) notify/rc/{clientID}/{correlationID} \n\
+4b) notify/mail/{clientID}/{correlationID} \n\
 s) status/{clientID}/{correlationID}"  as n1
 
 

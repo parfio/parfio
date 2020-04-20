@@ -31,8 +31,7 @@ services:
     restart: always
 
   text-mapper:
-    build:
-      context: ./text-mapper
+    image: docker.pkg.github.com/parfy-io/text-mapper/text-mapper:latest
     environment:
       CFG_MQTT_BROKER: "mqtt-broker:1883"
     depends_on:
@@ -47,4 +46,24 @@ services:
       - mqtt-broker
     restart: always
 
+  mail-notifier:
+    image: docker.pkg.github.com/parfy-io/mqtt-mail-notifier/mqtt-mail-notifier:latest
+    environment:
+      MMN_MAIL_SMTP_HOST: "smtp"
+      MMN_MAIL_SMTP_PORT: 1025
+      MMN_MAIL_SMTP_USERNAME: ""
+      MMN_MAIL_SMTP_PASSWORD: ""
+      MMN_MAIL_TLS_INSECURE_SKIP_VERIFY: "true"
+      MMN_MAIL_TLS_SERVER_NAME: "smtp"
+      MMN_MQTT_BROKER_ADDRESS: "mqtt-broker:1883"
+      MMN_MQTT_CLIENT_ID: "mqtt-mail-notifier"
+      MMN_USERS_SERVICE_BASE_URL: "http://user-service:8080"
+    depends_on:
+      - mqtt-broker
+      - smtp
+    restart: always
+
+  smtp:
+    image: mailhog/mailhog
+    restart: always
 
